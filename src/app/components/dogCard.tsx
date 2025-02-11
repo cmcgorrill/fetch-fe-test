@@ -3,10 +3,11 @@ import { Dog } from "../constants"
 import { HeartFilledIcon, HeartIcon } from "@radix-ui/react-icons"
 
 interface DogCardProps {
-  dog: Dog
+  dog: Dog,
+  onButtonClick: () => void
 }
 
-export const DogCard = ({ dog }: DogCardProps) => {
+export const DogCard = ({ dog, onButtonClick }: DogCardProps) => {
   return (
     <Card>
       <Flex gap="4" minWidth="200px" justify="between" align="center">
@@ -16,10 +17,11 @@ export const DogCard = ({ dog }: DogCardProps) => {
             <Heading size='4'>{dog.name}</Heading>
             <Text as="span">Age: {dog.age}</Text>
             <Text as="span">Breed: {dog.breed}</Text>
+            {/* //NICETOHAVE parse zip code to city/state location */}
             <Text as="span">Location: {dog.zip_code}</Text>
           </Flex>
         </Flex>
-        <Button>{dog.favorited ? <HeartFilledIcon /> : <HeartIcon />}</Button>
+        <Button onClick={onButtonClick}>{dog.favorited ? <HeartFilledIcon /> : <HeartIcon />}</Button>
       </Flex>
     </Card >)
 }

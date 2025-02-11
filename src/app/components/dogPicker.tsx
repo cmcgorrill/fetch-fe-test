@@ -1,6 +1,5 @@
-import { use, useEffect } from "react"
 import { useDogs } from "../hooks/useDogs"
-import { Box, Button, Container, Flex, Grid, Heading, Section } from "@radix-ui/themes"
+import { Box, Button, Container, Flex, Grid, Heading } from "@radix-ui/themes"
 import { DogCard } from "./dogCard"
 import { Dog } from "../constants"
 
@@ -9,14 +8,12 @@ interface DogPickerProps {
 }
 
 export const DogPicker = ({ isAuthed }: DogPickerProps) => {
-  const { dogs } = useDogs(isAuthed)
-  useEffect(() => {
-    console.log(dogs)
-  }, [dogs])
+  const { dogs, favorites, onFavoriteToggle } = useDogs(isAuthed)
+
   return <Container style={{ overflow: "hidden" }}>
     <Grid columns="2" gap="8">
-      <DogList title="Available dogs" dogs={dogs} />
-      <DogList title="Favorited dogs" dogs={dogs.filter((dog) => dog.favorited)} useCTA={true} />
+      <DogList title="Available dogs" dogs={dogs} onFavoriteToggle={onFavoriteToggle} />
+      <DogList title="Favorited dogs" dogs={favorites} onFavoriteToggle={onFavoriteToggle} isFavoritesList={true} />
     </Grid>
   </Container>
 }
@@ -24,22 +21,26 @@ export const DogPicker = ({ isAuthed }: DogPickerProps) => {
 interface DogListProps {
   title: string,
   dogs: Dog[],
-  useCTA?: boolean
+  onFavoriteToggle: (dog: Dog, index: number) => void
+  isFavoritesList?: boolean
 }
 
-const DogList = ({ title, dogs, useCTA = false }: DogListProps) => {
+const DogList = ({ title, dogs, onFavoriteToggle, isFavoritesList = false }: DogListProps) => {
   return <Container className="">
     <Flex align="center" justify="between" style={{ margin: '24px 12px' }}>
       <Heading>{title}</Heading>
-      {useCTA && <Button>Get my match</Button>}
+      {isFavoritesList && <Button>Get my match</Button>}
     </Flex>
+    {/* TODO filters and sorting not possible without the api calls working */}
+    {/* (technically it's possible client side, but that feels too hacky right now) */}
     <Box style={{
       overflowY: "auto",
-      height: "100vh",
+      height: "80vh",
       padding: "0 12px"
     }}>
       <Flex direction="column" gap="2" >
-        {dogs.map((dog: Dog) => <DogCard key={dog.id} dog={dog} />)}
+        {/* DONOW empty list states */}
+        {dogs.map((dog: Dog, index: number) => <DogCard key={index} dog={dog} onButtonClick={() => onFavoriteToggle(dog, index)} />)}
       </Flex>
     </Box>
 
