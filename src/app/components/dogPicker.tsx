@@ -1,21 +1,30 @@
 import { useDogs } from "../hooks/useDogs"
-import { Box, Container, Flex, Grid, Heading } from "@radix-ui/themes"
+import { Box, Button, Container, Flex, Grid, Heading } from "@radix-ui/themes"
 import { DogCard } from "./dogCard"
 import { Dog } from "../constants"
 import { MatchDialog } from "./matchDialog"
 import { EmptyAvailable, EmptyFavorites } from "./emptyStates"
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
 
 interface DogPickerProps {
   isAuthed: boolean
 }
 
 export const DogPicker = ({ isAuthed }: DogPickerProps) => {
-  const { dogs, favorites, onFavoriteToggle } = useDogs(isAuthed)
+  const { dogs, favorites, onFavoriteToggle, hasNext, hasPrev, onNext, onPrev } = useDogs(isAuthed)
 
   return <Container style={{ overflow: "hidden" }}>
     <Grid columns="2" gap="8">
-      <DogList title="Available dogs" dogs={dogs} onFavoriteToggle={onFavoriteToggle} />
-      <DogList title="Favorited dogs" dogs={favorites} onFavoriteToggle={onFavoriteToggle} isFavoritesList={true} />
+      <Container>
+        <DogList title="Available dogs" dogs={dogs} onFavoriteToggle={onFavoriteToggle} />
+        <Flex justify="between" style={{ margin: "12px" }}>
+          <Button disabled={!hasPrev} onClick={onPrev}><ChevronLeftIcon /></Button>
+          <Button disabled={!hasNext} onClick={onNext}><ChevronRightIcon /></Button>
+        </Flex>
+      </Container>
+      <Container>
+        <DogList title="Favorite dogs" dogs={favorites} onFavoriteToggle={onFavoriteToggle} isFavoritesList={true} />
+      </Container>
     </Grid>
   </Container>
 
@@ -29,7 +38,7 @@ interface DogListProps {
 }
 
 const DogList = ({ title, dogs, onFavoriteToggle, isFavoritesList = false }: DogListProps) => {
-  return <Container>
+  return <Box>
     <Flex align="center" justify="between" style={{ margin: '24px 12px' }}>
       <Heading>{title}</Heading>
       {isFavoritesList && <MatchDialog favorites={dogs} />}
@@ -45,6 +54,5 @@ const DogList = ({ title, dogs, onFavoriteToggle, isFavoritesList = false }: Dog
         {dogs.length < 1 ? (isFavoritesList ? <EmptyFavorites /> : <EmptyAvailable />) : dogs.map((dog: Dog, index: number) => <DogCard key={index} dog={dog} onButtonClick={() => onFavoriteToggle(dog, index)} />)}
       </Flex>
     </Box>
-    {/* DONOW 'pagination' */}
-  </Container >
+  </Box >
 }

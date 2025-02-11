@@ -2,16 +2,41 @@ import { useEffect, useState } from "react"
 import { API_URL, Dog, exampleDogData } from "../constants"
 
 export const useDogs = (isAuthed: boolean) => {
-  const [dogs, setDogs] = useState<Dog[]>(exampleDogData[0])
+  const [currentPage, setCurrentPage] = useState(0)
+  const [currentDogs, setCurrentDogs] = useState<Dog[]>(exampleDogData[currentPage])
+  const [allDogs, setAllDogs] = useState<Dog[][]>(exampleDogData)
+
+  const onNext = () => {
+    if (currentPage < 3) {
+      const newPage = currentPage + 1
+      setCurrentPage(newPage)
+      setCurrentDogs(allDogs[newPage])
+    }
+  }
+
+  const onPrev = () => {
+    if (currentPage > 0) {
+      const newPage = currentPage - 1
+      setCurrentPage(newPage)
+      setCurrentDogs(allDogs[newPage])
+    }
+  }
+
   const [favorites, setFavorites] = useState<Dog[]>([])
 
   const onFavoriteToggle = (dog: Dog, index: number) => {
     if (dog.favorited) {
-      setDogs(dogs.map((d) => d.id === dog.id ? { ...dog, favorited: false } : d))
       setFavorites(favorites.slice(0, index).concat(favorites.slice(index + 1, favorites.length)))
+      const updatedDogs = currentDogs.map((d) => d.id === dog.id ? { ...dog, favorited: false } : d)
+      setCurrentDogs(updatedDogs)
+      setAllDogs(allDogs.map((dogPage, index) => index === currentPage ? updatedDogs : dogPage))
+
     } else {
-      setDogs(dogs.map((d) => d.id === dog.id ? { ...dog, favorited: true } : d))
       setFavorites(favorites.concat({ ...dog, favorited: true }))
+      const updatedDogs = currentDogs.map((d) => d.id === dog.id ? { ...dog, favorited: true } : d)
+      setCurrentDogs(updatedDogs)
+      setAllDogs(allDogs.map((dogPage, index) => index === currentPage ? updatedDogs : dogPage))
+
     }
   }
 
@@ -29,7 +54,7 @@ export const useDogs = (isAuthed: boolean) => {
     }
   }, [isAuthed])
 
-  return { dogs, favorites, onFavoriteToggle }
+  return { dogs: currentDogs, favorites, onFavoriteToggle, hasPrev: currentPage > 0, hasNext: currentPage < 3, onNext, onPrev }
 }
 
 const fetchDogs = () => {
