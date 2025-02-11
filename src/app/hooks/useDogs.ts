@@ -5,6 +5,7 @@ export const useDogs = (isAuthed: boolean) => {
   const [currentPage, setCurrentPage] = useState(0)
   const [currentDogs, setCurrentDogs] = useState<Dog[]>(exampleDogData[currentPage])
   const [allDogs, setAllDogs] = useState<Dog[][]>(exampleDogData)
+  const [favorites, setFavorites] = useState<Dog[]>([])
 
   const onNext = () => {
     if (currentPage < 3) {
@@ -21,8 +22,6 @@ export const useDogs = (isAuthed: boolean) => {
       setCurrentDogs(allDogs[newPage])
     }
   }
-
-  const [favorites, setFavorites] = useState<Dog[]>([])
 
   const onFavoriteToggle = (dog: Dog, index: number) => {
     if (dog.favorited) {
@@ -43,9 +42,6 @@ export const useDogs = (isAuthed: boolean) => {
   useEffect(() => {
     if (isAuthed) {
       fetchDogs().then((res) => {
-        //PROBLEM: httpOnly cookie is not being included in requests, so they are failing
-        //with '401 Unauthorized'. Continuing using example data fetched in postman.
-
         //TODO after fixing cookie issue...
         //use dog IDs to get dog data
         //set dog data to list
@@ -58,6 +54,8 @@ export const useDogs = (isAuthed: boolean) => {
 }
 
 const fetchDogs = () => {
+  //PROBLEM: httpOnly cookie is not being included in requests, so they are failing
+  //with '401 Unauthorized'. Continued to work using example data fetched in postman.
   return fetch(`${API_URL}/dogs/search`, {
     method: 'GET',
     credentials: 'include',
