@@ -18,7 +18,7 @@ export const DogCard = ({ dog, onButtonClick }: DogCardProps) => {
             <Text as="span">Age: {dog.age}</Text>
             <Text as="span">Breed: {dog.breed}</Text>
             {/* //NICETOHAVE parse zip code to city/state location */}
-            <Text as="span">Location: {dog.zip_code}</Text>
+            <Text as="span">ZIP: {dog.zip_code}</Text>
           </Flex>
         </Flex>
         <Button onClick={onButtonClick}>{dog.favorited ? <HeartFilledIcon /> : <HeartIcon />}</Button>

@@ -6,11 +6,9 @@ export const useDogs = (isAuthed: boolean) => {
   const [favorites, setFavorites] = useState<Dog[]>([])
 
   const onFavoriteToggle = (dog: Dog, index: number) => {
-    console.log('FAV DOG: ', index, dog)
     if (dog.favorited) {
-      console.log('we shouldnt be here')
       setDogs(dogs.map((d) => d.id === dog.id ? { ...dog, favorited: false } : d))
-      setFavorites(favorites.slice(index, index + 1))
+      setFavorites(favorites.slice(0, index).concat(favorites.slice(index + 1, favorites.length)))
     } else {
       setDogs(dogs.map((d) => d.id === dog.id ? { ...dog, favorited: true } : d))
       setFavorites(favorites.concat({ ...dog, favorited: true }))
@@ -37,6 +35,6 @@ export const useDogs = (isAuthed: boolean) => {
 const fetchDogs = () => {
   return fetch(`${API_URL}/dogs/search`, {
     method: 'GET',
-    credentials: 'same-origin',
+    credentials: 'include',
   })
 }
