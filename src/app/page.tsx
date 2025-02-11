@@ -2,17 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { LoginView } from "./components/login";
-import { Box } from "@radix-ui/themes";
-import { DogList } from "./components/dogList";
+import { Box, ThemePanel } from "@radix-ui/themes";
+import { DogPicker } from "./components/dogPicker";
 
 export default function Home() {
-  const [isAuthed, setIsAuthed] = useState<boolean>(false)
+  // const [isAuthed, setIsAuthed] = useState<boolean>(false)
 
-  useEffect(() => {
-  }, [isAuthed])
   return (
     <Box>
-      {isAuthed ? <DogList isAuthed={isAuthed} /> : <LoginView setIsAuthed={setIsAuthed} />}
+      {/* {isAuthed ? <DogPicker isAuthed={isAuthed} /> : <LoginView setIsAuthed={setIsAuthed} />} */}
+      <DogPicker isAuthed={true} />
     </Box>
   );
 }

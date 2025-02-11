@@ -1,15 +1,18 @@
-'use client'
-
 import { useEffect, useState } from "react"
-import { API_URL, Dog } from "../constants"
+import { API_URL, Dog, exampleDogData } from "../constants"
 
 export const useDogs = (isAuthed: boolean) => {
-  const [dogs, setDogs] = useState<Dog[]>([])
+  const [dogs, setDogs] = useState<Dog[]>(exampleDogData[0])
 
   useEffect(() => {
-    console.log('is authed', isAuthed)
     if (isAuthed) {
       fetchDogs().then((res) => {
+        //PROBLEM: httpOnly cookie is not being included in requests, so they are failing
+        //with '401 Unauthorized'. Continuing using example data fetched in postman.
+
+        //TODO after fixing cookie issue...
+        //use dog IDs to get dog data
+        //set dog data to list
         res.json().then((data) => { console.log('dogs?:', data) })
       })
     }
@@ -21,6 +24,6 @@ export const useDogs = (isAuthed: boolean) => {
 const fetchDogs = () => {
   return fetch(`${API_URL}/dogs/search`, {
     method: 'GET',
-    credentials: 'include'
+    credentials: 'same-origin',
   })
 }
