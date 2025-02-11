@@ -1,7 +1,9 @@
 
 ## Getting Started
 
-Run the development server:
+Live version [here](https://cmcgorrill.github.io/fetch-fe-test).
+
+To run locally:
 
 ```bash
 npm run dev
