@@ -10,7 +10,6 @@ export default function Home() {
   return (
     <Box>
       {isAuthed ? <DogPicker isAuthed={isAuthed} /> : <LoginView setIsAuthed={setIsAuthed} />}
-      <DogPicker isAuthed={true} />
     </Box>
   );
 }
